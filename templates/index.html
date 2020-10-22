@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+{% block content %}
+    {% for post in posts %}
+    <div class="container-fluid">
+        <div class="row">
+            <ul class="list-group">
+                <li class="list-group-item" style="text-overflow: ellipsis; overflow: hidden;">
+                    <a href="/post/{{post.postid}}" style="white-space: nowrap;">{{ post.title }}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}
