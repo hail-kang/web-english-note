@@ -60,8 +60,8 @@
             $('#videoframe').attr('src', url);
         }
 
-        var koreans = '{{post.korean}}'.split(';');
-        var englishs = '{{post.english}}'.split(';');
+        var koreans = '{{post.korean}}'.replaceAll('&#39;', "'").split(';');
+        var englishs = '{{post.english}}'.replaceAll('&#39;', "'").split(';');
 
         textCount = koreans.length-1;
 
@@ -146,11 +146,11 @@
         }
 
         $.ajax({
-            url: '/post',
+            url: '/post/{{post.postid}}',
             type: 'put',
             data: data,
-            success: function(postid){
-                location.href = '/post/' + postid;
+            success: function(data){
+                location.href = '/post/' + data.postid;
             }
         });
     }

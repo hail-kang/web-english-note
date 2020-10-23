@@ -119,8 +119,8 @@
             url: '/post',
             type: 'post',
             data: data,
-            success: function(postid){
-                location.href = '/post/' + postid;
+            success: function(data){
+                location.href = '/post/' + data.postid;
             }
         });
     }
