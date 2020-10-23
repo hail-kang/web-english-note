@@ -1,0 +1,128 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" class="form-control" id="title" placeholder="제목을 입력하시오">
+            </div>
+
+            <div class="form-group">
+                <label for="videolink">Link</label>
+                <input type="text" class="form-control" id="videolink" placeholder="유튜브 주소를 입력하시오" onblur="showVideo()">
+                <input type="hidden" id="videoembed">
+                <div class="embed-responsive embed-responsive-16by9" style="display: none;" id="videodiv">
+                    <iframe id="videoframe" 
+                    class="embed-responsive-item"
+                    src="" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen
+                    ></iframe>
+                </div>
+            </div> 
+
+            <div class="form-group" id="text">
+                <div>
+                    <label for="kor-1">Text</label>
+                    <input type="text" class="form-control" id="kor-0" placeholder="한국어를 입력하시오">
+                    <input type="text" class="form-control" id="eng-0" placeholder="영어를 입력하시오">
+                </div>
+            </div> 
+            <button type="button" class="btn btn-default" onclick="addText()">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+            <button type="button" class="btn btn-danger" onclick="removeText()">
+                <span class="glyphicon glyphicon-minus"></span>
+            </button>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-6 col-xs-6">
+            <a class="btn btn-lg btn-default btn-block" href="/">취소</a>
+        </div>
+        <div class="col-md-6 col-xs-6">
+            <button class="btn btn-lg btn-primary btn-block" onclick="save()">저장</button>
+        </div>
+    </div>
+</div>
+<script>
+    var textCount = 0;
+
+    function showVideo(){
+        var url = $('#videolink').val().trim();
+        if(url != ''){
+            $('#videodiv').show();
+            var code = url.slice(url.lastIndexOf('/') + 1);
+            var embed = 'https://www.youtube.com/embed/' + code;
+            $('#videoframe').attr('src', embed);
+            $('#videoembed').val(embed);
+        }
+        else{
+            $('#videodiv').hide();
+            $('#videoframe').attr('src', '');
+            $('#videoembed').val('');
+        }
+    }
+
+    function addText(){
+        textCount += 1;
+        var html = '<div id=text-' + textCount + '>' + 
+                '<br>'+
+                '<input type="text" class="form-control" id="kor-' + textCount + '" placeholder="한국어를 입력하시오">' + 
+                '<input type="text" class="form-control" id="eng-' + textCount + '" placeholder="영어를 입력하시오">' + 
+                '</div>';
+
+        $('#text').append(html);
+    }
+
+    function removeText(){
+        if(textCount < 1){
+            alert('문장은 적어도 하나 존재해야 합니다.');
+            return;
+        }
+        if(confirm('마지막 문장을 삭제하시겠습니까?')){
+            $('#text-' + textCount).remove();
+            textCount -= 1;
+        }
+    }
+
+    function save(){
+        var data = {};
+        data['title'] = $('#title').val();
+        data['videolink'] = $('#videoembed').val();
+        data['memo'] = $('#memo').val();
+        data['korean'] = '';
+        data['english'] = '';
+
+        var koreans = $('input[id*=kor]');
+        var englishs = $('input[id*=eng]');
+
+        for(var korean of koreans){
+            var kor = $(korean).val();
+            if(kor != ''){
+                data['korean'] += kor + ';';
+            }
+        }
+
+        for(var english of englishs){
+            var eng = $(english).val();
+            if(eng != ''){
+                data['english'] += eng + ';';
+            }
+        }
+
+        $.ajax({
+            url: '/post',
+            type: 'post',
+            data: data,
+            success: function(postid){
+                location.href = '/post/' + postid;
+            }
+        });
+    }
+</script>
+{% endblock %}
