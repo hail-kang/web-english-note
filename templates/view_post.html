@@ -11,7 +11,7 @@
 
             <div class="form-group">
                 <label for="videolink">Link</label>
-                <div class="embed-responsive embed-responsive-16by9" id="videodiv">
+                <div class="embed-responsive embed-responsive-16by9" style="display: none;" id="videodiv">
                     <iframe id="videoframe" 
                     class="embed-responsive-item"
                     src="{{post.videolink}}" 
@@ -39,6 +39,11 @@
 </div>
 <script>
     $(function(){
+        var url = '{{post.videolink}}'.trim();
+        if(url != ''){
+            $('#videodiv').show()
+        }
+
         var koreans = '{{post.korean}}'.replaceAll('&#39;', "'").split(';');
         var englishs = '{{post.english}}'.replaceAll('&#39;', "'").split(';');
         var length = koreans.length-1;
