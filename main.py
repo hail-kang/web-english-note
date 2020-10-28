@@ -5,18 +5,21 @@ import json
 app = Flask(__name__)
 app.secret_key = b'myspecialkey'
 
+def db_connect():
+    return pymysql.connect(
+        user='root', 
+        passwd='1234', 
+        host='127.0.0.1', 
+        db='english_note', 
+        charset='utf8'
+    )
+
 @app.route('/login', methods=['POST'])
 def login():
     db = None
     try:
+        db = db_connect()
         username = request.form['username']
-        db = pymysql.connect(
-            user='root', 
-            passwd='1234', 
-            host='127.0.0.1', 
-            db='english_note', 
-            charset='utf8'
-        )
         with db.cursor(pymysql.cursors.DictCursor) as cursor:
             sql = 'select * from user where username=%s'
             cursor.execute(sql, username)
@@ -33,13 +36,14 @@ def login():
             session['username'] = username
             session['userid'] = result['userid']
 
-    except Exception as e:
-        # return jsonify(e)
-        pass
-    finally:
         if db != None:
             db.close()
-    return redirect(url_for('index'))
+        return redirect(url_for('index'))
+    except:
+        if db != None:
+            db.close()
+        return 'error'
+    
 
 @app.route('/logout')
 def logout():
@@ -52,24 +56,18 @@ def index():
     if 'username' in session:
         db = None
         try:
-            db = pymysql.connect(
-                user='hail', 
-                passwd='1234', 
-                host='127.0.0.1', 
-                db='english_note', 
-                charset='utf8'
-            )
+            db = db_connect()
             with db.cursor(pymysql.cursors.DictCursor) as cursor:
                 sql = 'select * from post where userid=%s'
                 cursor.execute(sql, session['userid'])
                 result = cursor.fetchall()
-        except Exception as e:
-            # return jsonify(e)
-            pass
-        finally:
             if db != None:
                 db.close()
-        return render_template('index.html', posts=result)
+            return render_template('index.html', posts=result)
+        except:
+            if db != None:
+                db.close()
+            return 'error'
     else:
         return render_template('login.html')
 
@@ -81,13 +79,7 @@ def create_post_render():
 def create_post_action():
     db = None
     try:
-        db = pymysql.connect(
-            user='hail', 
-            passwd='1234', 
-            host='127.0.0.1', 
-            db='english_note', 
-            charset='utf8'
-        )
+        db = db_connect()
         with db.cursor(pymysql.cursors.DictCursor) as cursor:
             sql = 'insert into post(userid, title, videolink, memo, korean, english) values(%s, %s, %s, %s, %s, %s)'
             cursor.execute(sql, (session['userid'],
@@ -101,71 +93,56 @@ def create_post_action():
             sql = 'select last_insert_id() postid'
             cursor.execute(sql)
             result = cursor.fetchone()
-    except Exception as e:
-        # return jsonify(e)
-        pass
-    finally:
+
         if db != None:
             db.close()
-    return result
+        return result
+    except:
+        if db != None:
+            db.close()
+        return 'error'
 
 @app.route('/post/<int:postid>')
 def view_post_render(postid):
     db = None
     try:
-        db = pymysql.connect(
-            user='hail', 
-            passwd='1234', 
-            host='127.0.0.1', 
-            db='english_note', 
-            charset='utf8'
-        )
+        db = db_connect()
         with db.cursor(pymysql.cursors.DictCursor) as cursor:
             sql = 'select * from post where postid=%s'
             cursor.execute(sql, postid)
             result = cursor.fetchone()
-    except Exception as e:
-        # return jsonify(e)
-        pass
-    finally:
+
         if db != None:
             db.close()
-    return render_template('view_post.html', post=result)
+        return render_template('view_post.html', post=result)
+    except:
+        if db != None:
+            db.close()
+        return 'error'
 
 @app.route('/modifypost/<int:postid>')
 def modify_post_render(postid):
     db = None
     try:
-        db = pymysql.connect(
-            user='hail', 
-            passwd='1234', 
-            host='127.0.0.1', 
-            db='english_note', 
-            charset='utf8'
-        )
+        db = db_connect()
         with db.cursor(pymysql.cursors.DictCursor) as cursor:
             sql = 'select * from post where postid=%s'
             cursor.execute(sql, postid)
             result = cursor.fetchone()
-    except Exception as e:
-        # return jsonify(e)
-        pass
-    finally:
+        
         if db != None:
             db.close()
-    return render_template('modify_post.html', post=result)
+        return render_template('modify_post.html', post=result)
+    except:
+        if db != None:
+            db.close()
+        return 'error'
 
 @app.route('/post/<int:postid>', methods=['PUT'])
 def modify_post_action(postid):
     db = None
     try:
-        db = pymysql.connect(
-            user='hail', 
-            passwd='1234', 
-            host='127.0.0.1', 
-            db='english_note', 
-            charset='utf8'
-        )
+        db = db_connect()
         with db.cursor(pymysql.cursors.DictCursor) as cursor:
             sql = 'update post set title=%s, videolink=%s, memo=%s, korean=%s, english=%s where postid=%s'
             cursor.execute(sql,
@@ -176,36 +153,32 @@ def modify_post_action(postid):
                 request.form.get('english'),
                 postid))
             db.commit()
-    except Exception as e:
-        # return jsonify(e)
-        pass
-    finally:
+        
         if db != None:
             db.close()
-    return {'postid' : postid}\
+        return {'postid' : postid}
+    except:
+        if db != None:
+            db.close()
+        return 'error'
 
 @app.route('/post/<int:postid>', methods=['DELETE'])
 def delete_post_action(postid):
     db = None
     try:
-        db = pymysql.connect(
-            user='hail', 
-            passwd='1234', 
-            host='127.0.0.1', 
-            db='english_note', 
-            charset='utf8'
-        )
+        db = db_connect()
         with db.cursor(pymysql.cursors.DictCursor) as cursor:
             sql = 'delete from post where postid=%s'
             cursor.execute(sql, postid)
         db.commit()
-    except Exception as e:
-        # return jsonify(e)
-        pass
-    finally:
+
         if db != None:
             db.close()
-    return 'success'
+        return 'success'
+    except:
+        if db != None:
+            db.close()
+        return 'error'
 
 if __name__ == '__main__':
     app.run(host='10.41.77.84', port='13300')
