@@ -34,7 +34,8 @@ def login():
             session['userid'] = result['userid']
 
     except Exception as e:
-        return jsonify(e)
+        # return jsonify(e)
+        pass
     finally:
         if db != None:
             db.close()
@@ -62,7 +63,8 @@ def index():
                 cursor.execute(sql, session['userid'])
                 result = cursor.fetchall()
         except Exception as e:
-            return jsonify(e)
+            # return jsonify(e)
+            pass
         finally:
             if db != None:
                 db.close()
@@ -99,7 +101,8 @@ def create_post_action():
             cursor.execute(sql)
             result = cursor.fetchone()
     except Exception as e:
-        return jsonify(e)
+        # return jsonify(e)
+        pass
     finally:
         if db != None:
             db.close()
@@ -121,7 +124,8 @@ def view_post_render(postid):
             cursor.execute(sql, postid)
             result = cursor.fetchone()
     except Exception as e:
-        return jsonify(e)
+        # return jsonify(e)
+        pass
     finally:
         if db != None:
             db.close()
@@ -143,7 +147,8 @@ def modify_post_render(postid):
             cursor.execute(sql, postid)
             result = cursor.fetchone()
     except Exception as e:
-        return jsonify(e)
+        # return jsonify(e)
+        pass
     finally:
         if db != None:
             db.close()
@@ -171,7 +176,8 @@ def modify_post_action(postid):
                 postid))
             db.commit()
     except Exception as e:
-        return jsonify(e)
+        # return jsonify(e)
+        pass
     finally:
         if db != None:
             db.close()
@@ -193,7 +199,8 @@ def delete_post_action(postid):
             cursor.execute(sql, postid)
         db.commit()
     except Exception as e:
-        return jsonify(e)
+        # return jsonify(e)
+        pass
     finally:
         if db != None:
             db.close()
