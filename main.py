@@ -50,6 +50,7 @@ def logout():
 @app.route('/')
 def index():
     if 'username' in session:
+        db = None
         try:
             db = pymysql.connect(
                 user='hail', 
