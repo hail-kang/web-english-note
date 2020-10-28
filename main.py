@@ -1,4 +1,3 @@
-#git email confirm-02
 from flask import Flask, request, session, url_for, render_template, redirect, jsonify
 import pymysql
 import json
