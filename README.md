@@ -1,12 +1,12 @@
 # web-english-note
 
-- description
+# description
 영어 공부를 위한 간단한 웹 어플리케이션
 
-- environment
+# environment
 python 3.x
 
-- usage
+# usage
 ```
 python main.py
 ```
