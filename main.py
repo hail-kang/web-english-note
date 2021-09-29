@@ -181,4 +181,5 @@ def delete_post_action(postid):
         return 'error'
 
 if __name__ == '__main__':
-    app.run(host='10.41.77.84', port='13300')
+    # app.run(host='10.41.77.84', port='13300')
+    app.run(host='127.0.0.1', port='13300')
