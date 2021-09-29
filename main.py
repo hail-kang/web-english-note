@@ -1,6 +1,7 @@
 from flask import Flask, request, session, url_for, render_template, redirect, jsonify
 import pymysql
 import json
+import sys
 
 app = Flask(__name__)
 app.secret_key = b'myspecialkey'
@@ -181,5 +182,6 @@ def delete_post_action(postid):
         return 'error'
 
 if __name__ == '__main__':
-    # app.run(host='10.41.77.84', port='13300')
-    app.run(host='127.0.0.1', port='13300')
+    host = sys.argv[1]
+    port = sys.argv[2]
+    app.run(host=host, port=port)
