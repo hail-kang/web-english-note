@@ -182,6 +182,13 @@ def delete_post_action(postid):
         return 'error'
 
 if __name__ == '__main__':
-    host = sys.argv[1] or '127.0.0.1'
-    port = sys.argv[2] or '8000'
+    if len(sys.argv) == 2:
+        host = sys.argv[1]
+        port = sys.argv[2]
+    elif len(sys.argv) == 1:
+        host = sys.argv[1]
+        port = '8000'
+    else:
+        host = '127.0.0.1'
+        port = '8000'
     app.run(host=host, port=port)
