@@ -1,7 +1,15 @@
 import "./index.scss";
 
 import React from "react";
-import ReactDOM from "react-dom";
-import App from "./components/app";
+import { render } from "react-dom";
+import { Router, Route, hashHistory } from "react-router";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+import App from "./components/App";
+import Login from "./components/Login";
+
+render(
+  <Router>
+    <Route path="/" component={App} />
+  </Router>,
+  document.getElementById("root")
+);
