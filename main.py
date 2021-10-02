@@ -70,7 +70,7 @@ def index():
                 db.close()
             return 'error'
     else:
-        return render_template('__login.html')
+        return render_template('login.html')
 
 @app.route('/post', methods=['GET'])
 def create_post_render():
