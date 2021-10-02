@@ -3,7 +3,7 @@ import pymysql
 import json
 import sys
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/dist', static_folder='fe_dist')
 app.secret_key = b'myspecialkey'
 
 def db_connect():
@@ -70,7 +70,7 @@ def index():
                 db.close()
             return 'error'
     else:
-        return render_template('login.html')
+        return render_template('__login.html')
 
 @app.route('/post', methods=['GET'])
 def create_post_render():
@@ -182,10 +182,10 @@ def delete_post_action(postid):
         return 'error'
 
 if __name__ == '__main__':
-    if len(sys.argv) == 2:
+    if len(sys.argv) == 3:
         host = sys.argv[1]
         port = sys.argv[2]
-    elif len(sys.argv) == 1:
+    elif len(sys.argv) == 2:
         host = sys.argv[1]
         port = '8000'
     else:
