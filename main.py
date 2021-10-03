@@ -1,7 +1,12 @@
-from flask import Flask, request, session, url_for, render_template, redirect, jsonify
+from typing import final
+from flask import Flask
+from flask import request, session
+from flask import url_for, render_template, redirect, jsonify
 import pymysql
 import json
 import sys
+
+from pymysql import connections
 
 app = Flask(__name__, static_url_path='/dist', static_folder='fe_dist')
 app.secret_key = b'myspecialkey'
@@ -15,12 +20,42 @@ def db_connect():
         charset='utf8'
     )
 
+@app.route('/posts', methods=['GET'])
+def get_posts():
+    if 'username' in session:
+        db = None
+        response_data = None
+        try:
+            db = db_connect()
+            with db.cursor(pymysql.cursors.DictCursor) as cursor:
+                sql = 'select * from post where userid=%s'
+                cursor.execute(sql, session['userid'])
+                result = cursor.fetchall()
+            response_data = {
+                'state': 'success',
+                'posts': result
+            }
+        except:
+            response_data = {
+                'state': 'error'
+            }
+        finally:
+            if db != None:
+                db.close()
+            return response_data
+    else:
+        return {
+            'state': 'erro'
+        }
+
 @app.route('/login', methods=['POST'])
 def login():
     db = None
+    response_data = None
     try:
         db = db_connect()
-        username = request.form['username']
+        username = request.get_json()['username']
+        print(username)
         with db.cursor(pymysql.cursors.DictCursor) as cursor:
             sql = 'select * from user where username=%s'
             cursor.execute(sql, username)
@@ -37,14 +72,17 @@ def login():
             session['username'] = username
             session['userid'] = result['userid']
 
-        if db != None:
-            db.close()
-        return redirect(url_for('index'))
+        response_data = {
+            'state': 'success'
+        }
     except:
+        response_data = {
+            'state': 'error'
+        }
+    finally:
         if db != None:
             db.close()
-        return 'error'
-    
+        return response_data
 
 @app.route('/logout')
 def logout():
@@ -70,7 +108,7 @@ def index():
                 db.close()
             return 'error'
     else:
-        return render_template('login.html')
+        return render_template('__login.html')
 
 @app.route('/post', methods=['GET'])
 def create_post_render():
@@ -191,4 +229,4 @@ if __name__ == '__main__':
     else:
         host = '127.0.0.1'
         port = '8000'
-    app.run(host=host, port=port)
+    app.run(host=host, port=port, debug=True)
