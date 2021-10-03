@@ -37,20 +37,23 @@ class App extends React.Component {
                 <Nav.Link as={Link} to="/post">
                   Create
                 </Nav.Link>
-                <Nav.Link href="/logout">Sign out()</Nav.Link>
+                <Nav.Link as={Link} to="/login">
+                  Sign in
+                </Nav.Link>
+                {/* <Nav.Link href="/logout">Sign out()</Nav.Link> */}
               </Nav>
             </Navbar.Collapse>
           </Container>
         </Navbar>
         <Switch>
-          <Route exact path="/post">
+          <Route exact path="/">
+            <div>main</div>
+          </Route>
+          <Route path="/post">
             <PostList />
           </Route>
           <Route path="/login">
             <Login />
-          </Route>
-          <Route exact path="/">
-            <div>main</div>
           </Route>
         </Switch>
       </BrowserRouter>

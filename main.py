@@ -45,7 +45,7 @@ def get_posts():
             return response_data
     else:
         return {
-            'state': 'erro'
+            'state': 'error'
         }
 
 @app.route('/login', methods=['POST'])
