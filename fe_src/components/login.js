@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Col,
   Container,
@@ -8,6 +8,45 @@ import {
   FormControl,
   Button,
 } from "react-bootstrap";
+import { useHistory } from "react-router";
+
+function LoginForm() {
+  let history = useHistory();
+  const [username, setUsername] = useState("");
+  function login() {
+    fetch("/login", {
+      method: "post",
+      body: JSON.stringify({ username }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((dataJson) => {
+        console.log(dataJson);
+        history.push("/test");
+      });
+  }
+  function onUsernameInput(event) {
+    setUsername(event.target.value);
+  }
+
+  return (
+    <InputGroup>
+      <FormControl
+        type="text"
+        placeholder="이름을 입력하시오"
+        value={username}
+        onInput={onUsernameInput}
+      ></FormControl>
+      <Button variant="outline-secondary" onClick={login}>
+        확인
+      </Button>
+    </InputGroup>
+  );
+}
 
 class Login extends React.Component {
   render() {
@@ -16,13 +55,7 @@ class Login extends React.Component {
         <Row>
           <Col md={{ offset: 4, span: 4 }} xs={{ offset: 2, span: 8 }}>
             <Form>
-              <InputGroup>
-                <FormControl
-                  type="text"
-                  placeholder="이름을 입력하시오"
-                ></FormControl>
-                <Button variant="outline-secondary">확인</Button>
-              </InputGroup>
+              <LoginForm />
             </Form>
           </Col>
         </Row>
