@@ -10,7 +10,7 @@ import {
 } from "react-bootstrap";
 import { useHistory } from "react-router";
 
-function LoginForm() {
+function LoginForm({ setAuth }) {
   let history = useHistory();
   const [username, setUsername] = useState("");
   function login() {
@@ -26,7 +26,11 @@ function LoginForm() {
       })
       .then((dataJson) => {
         console.log(dataJson);
-        history.push("/test");
+        setAuth({
+          isLoggedIn: true,
+          username: "hail",
+        });
+        history.push("/");
       });
   }
   function onUsernameInput(event) {
@@ -48,20 +52,18 @@ function LoginForm() {
   );
 }
 
-class Login extends React.Component {
-  render() {
-    return (
-      <Container style={{ marginTop: "200px" }}>
-        <Row>
-          <Col md={{ offset: 4, span: 4 }} xs={{ offset: 2, span: 8 }}>
-            <Form>
-              <LoginForm />
-            </Form>
-          </Col>
-        </Row>
-      </Container>
-    );
-  }
+function Login({ setAuth }) {
+  return (
+    <Container style={{ marginTop: "200px" }}>
+      <Row>
+        <Col md={{ offset: 3, span: 6 }} xs={{ offset: 2, span: 8 }}>
+          <Form>
+            <LoginForm setAuth={setAuth} />
+          </Form>
+        </Col>
+      </Row>
+    </Container>
+  );
 }
 
 export default Login;
