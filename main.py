@@ -168,7 +168,9 @@ def create_post_action():
     except:
         if db != None:
             db.close()
-        return 'error'
+        return {
+            'state': 'error'
+        }
 
 # @app.route('/post/<int:postid>')
 # def view_post_render(postid):
@@ -206,47 +208,54 @@ def create_post_action():
 #             db.close()
 #         return 'error'
 
-# @app.route('/post/<int:postid>', methods=['PUT'])
-# def modify_post_action(postid):
-#     db = None
-#     try:
-#         db = db_connect()
-#         with db.cursor(pymysql.cursors.DictCursor) as cursor:
-#             sql = 'update post set title=%s, videolink=%s, memo=%s, korean=%s, english=%s where postid=%s'
-#             cursor.execute(sql,
-#                 (request.form.get('title'),
-#                 request.form.get('videolink'),
-#                 request.form.get('memo'),
-#                 request.form.get('korean'),
-#                 request.form.get('english'),
-#                 postid))
-#             db.commit()
+@app.route('/post/<int:postid>', methods=['PUT'])
+def modify_post_action(postid):
+    db = None
+    try:
+        db = db_connect()
+        data = request.get_json()
+        with db.cursor(pymysql.cursors.DictCursor) as cursor:
+            sql = 'update post set title=%s, videolink=%s, memo=%s, korean=%s, english=%s where postid=%s'
+            cursor.execute(sql,
+                (data.get('title'),
+                data.get('videolink'),
+                data.get('memo'),
+                data.get('korean'),
+                data.get('english'),
+                postid))
+            db.commit()
         
-#         if db != None:
-#             db.close()
-#         return {'postid' : postid}
-#     except:
-#         if db != None:
-#             db.close()
-#         return 'error'
+        if db != None:
+            db.close()
+        return {'postid' : postid}
+    except:
+        if db != None:
+            db.close()
+        return {
+            'state': 'error'
+        }
 
-# @app.route('/post/<int:postid>', methods=['DELETE'])
-# def delete_post_action(postid):
-#     db = None
-#     try:
-#         db = db_connect()
-#         with db.cursor(pymysql.cursors.DictCursor) as cursor:
-#             sql = 'delete from post where postid=%s'
-#             cursor.execute(sql, postid)
-#         db.commit()
+@app.route('/post/<int:postid>', methods=['DELETE'])
+def delete_post_action(postid):
+    db = None
+    try:
+        db = db_connect()
+        with db.cursor(pymysql.cursors.DictCursor) as cursor:
+            sql = 'delete from post where postid=%s'
+            cursor.execute(sql, postid)
+        db.commit()
 
-#         if db != None:
-#             db.close()
-#         return 'success'
-#     except:
-#         if db != None:
-#             db.close()
-#         return 'error'
+        if db != None:
+            db.close()
+        return {
+            'state': 'success'
+        }
+    except:
+        if db != None:
+            db.close()
+        return {
+            'state': 'error'
+        }
 
 if __name__ == '__main__':
     if len(sys.argv) == 3:

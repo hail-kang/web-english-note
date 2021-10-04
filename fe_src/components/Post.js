@@ -124,13 +124,34 @@ function Post() {
   }
 
   function deletePost() {
-    console.log("delete");
+    if (!confirm("정말 삭제 하시겠습니까?")) {
+      return;
+    }
+    fetch(`/post/${postid}`, {
+      method: "delete",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        alert("삭제가 완료 됐습니다.");
+        history.push("/");
+      });
   }
 
   function createPost() {
     fetch("/post", {
       method: "post",
-      body: JSON.stringify(state),
+      body: JSON.stringify({
+        title: state.title,
+        videolink: state.videolink,
+        korean: state.korean.join(";"),
+        english: state.english.join(";"),
+      }),
       headers: {
         "Content-Type": "application/json",
       },
@@ -151,7 +172,24 @@ function Post() {
   }
 
   function updatePost() {
-    console.log("update");
+    fetch("/post", {
+      method: "put",
+      body: JSON.stringify({
+        title: state.title,
+        videolink: state.videolink,
+        korean: state.korean.join(";"),
+        english: state.english.join(";"),
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+      });
   }
 
   if (
@@ -235,9 +273,11 @@ function Post() {
                 );
               })}
               <Button variant="light" onClick={addText}>
+                {/* <span className="fas fa-plus"></span> */}
                 <span className="fi-plus"></span>
               </Button>{" "}
               <Button variant="danger" onClick={removeText}>
+                {/* <span className="fas fa-minus"></span> */}
                 <span className="fi-minus"></span>
               </Button>
             </Form.Group>
@@ -334,23 +374,24 @@ function Post() {
                       <>
                         <p id={`kor-${i}`}>
                           <span
-                            className="visible"
+                            className="fi-caret-bottom"
                             onClick={(e) => changeVisible(e, i)}
-                          >
-                            {state.korean[i]}
-                          </span>
+                          ></span>
+                          {state.korean[i]}
                         </p>
-                        <p id={`eng-${i}`}>{state.english[i]}</p>
+                        <p id={`eng-${i}`} style={{ paddingLeft: "20px" }}>
+                          {state.english[i]}
+                        </p>
                       </>
                     ) : (
                       <>
                         <p id={`kor-${i}`}>
                           <span
-                            className="nonvisible"
+                            className="fi-caret-right"
                             onClick={(e) => changeVisible(e, i)}
-                          >
-                            {state.korean[i]}
-                          </span>
+                            style={{ marginRight: "4px" }}
+                          ></span>
+                          {state.korean[i]}
                         </p>
                       </>
                     )}
