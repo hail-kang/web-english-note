@@ -52,7 +52,10 @@ function App() {
         <Route exact path="/">
           {auth.isLoggedIn ? <PostList /> : <Redirect to="/login" />}
         </Route>
-        <Route path="/post">
+        <Route exact path="/post">
+          <Post />
+        </Route>
+        <Route path="/post/:postid">
           <Post />
         </Route>
         <Route path="/login">
