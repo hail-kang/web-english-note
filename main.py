@@ -1,5 +1,5 @@
 from typing import final
-from flask import Flask
+from flask import Flask, Response
 from flask import request, session
 from flask import url_for, render_template, redirect, jsonify
 import pymysql
@@ -20,70 +20,33 @@ def db_connect():
         charset='utf8'
     )
 
-@app.route('/posts', methods=['GET'])
-def get_posts():
-    if 'username' in session:
-        db = None
-        response_data = None
-        try:
-            db = db_connect()
-            with db.cursor(pymysql.cursors.DictCursor) as cursor:
-                sql = 'select * from post where userid=%s'
-                cursor.execute(sql, session['userid'])
-                result = cursor.fetchall()
-            response_data = {
-                'state': 'success',
-                'posts': result
-            }
-        except:
-            response_data = {
-                'state': 'error'
-            }
-        finally:
-            if db != None:
-                db.close()
-            return response_data
-    else:
-        return {
-            'state': 'error'
-        }
+@app.route('/', methods=['GET'])
+def index():
+    return render_template('index.html')
+    # if 'username' in session:
+    #     db = None
+    #     try:
+    #         db = db_connect()
+    #         with db.cursor(pymysql.cursors.DictCursor) as cursor:
+    #             sql = 'select * from post where userid=%s'
+    #             cursor.execute(sql, session['userid'])
+    #             result = cursor.fetchall()
+    #         if db != None:
+    #             db.close()
+    #         return render_template('index.html', posts=result)
+    #     except:
+    #         if db != None:
+    #             db.close()
+    #         return 'error'
+    # else:
+    #     return render_template('index.html')
 
-@app.route('/post/<int:postid>', methods=['GET'])
-def get_post(postid):
-    if 'username' in session:
-        db = None
-        response_data = None
-        try:
-            db = db_connect()
-            with db.cursor(pymysql.cursors.DictCursor) as cursor:
-                sql = 'select * from post where userid=%s and postid=%s'
-                cursor.execute(sql, (session['userid'], postid))
-                result = cursor.fetchone()
-            response_data = {
-                'state': 'success',
-                **result
-            }
-        except:
-            response_data = {
-                'state': 'error'
-            }
-        finally:
-            if db != None:
-                db.close()
-            return response_data
-    else:
-        return {
-            'state': 'error'
-        }
-
-@app.route('/login', methods=['POST'])
-def login():
+@app.route('/signin', methods=['POST'])
+def signin():
     db = None
-    response_data = None
     try:
         db = db_connect()
         username = request.get_json()['username']
-        print(username)
         with db.cursor(pymysql.cursors.DictCursor) as cursor:
             sql = 'select * from user where username=%s'
             cursor.execute(sql, username)
@@ -100,27 +63,36 @@ def login():
             session['username'] = username
             session['userid'] = result['userid']
 
-        response_data = {
-            'state': 'success',
-            'username': username
-        }
+        response = Response(
+            json.dumps({
+                'userid': result['userid'],
+                'username': username
+            }),
+            status=200,
+            mimetype='application/json'
+        )
     except:
-        response_data = {
-            'state': 'error'
-        }
+        response = Response(
+            json.dumps({
+                'message': 'The database cannot be accessed.',
+            }),
+            status=403,
+            mimetype='application/json'
+        )
     finally:
         if db != None:
             db.close()
-        return response_data
 
-@app.route('/logout')
-def logout():
+        return response
+
+@app.route('/signout', methods=['GET'])
+def signout():
     session.pop('username')
     session.pop('userid')
     return redirect(url_for('index'))
 
-@app.route('/')
-def index():
+@app.route('/posts', methods=['GET'])
+def get_posts():
     if 'username' in session:
         db = None
         try:
@@ -129,134 +101,217 @@ def index():
                 sql = 'select * from post where userid=%s'
                 cursor.execute(sql, session['userid'])
                 result = cursor.fetchall()
-            if db != None:
-                db.close()
-            return render_template('index.html', posts=result)
-        except:
-            if db != None:
-                db.close()
-            return 'error'
-    else:
-        return render_template('__login.html')
 
-# @app.route('/post', methods=['GET'])
-# def create_post_render():
-#     return render_template('create_post.html')
+            response = Response(
+                json.dumps({
+                    'posts': result
+                }),
+                status=200,
+                mimetype='application/json'
+            )
+        except:
+            response = Response(
+                json.dumps({
+                    'message': 'The database cannot be accessed.',
+                }),
+                status=403,
+                mimetype='application/json'
+            )
+        finally:
+            if db != None:
+                db.close()
+
+            return response
+    else:
+        return Response(
+            json.dumps({
+                'message': 'The user was not found in the session.',
+            }),
+            status=404,
+            mimetype='application/json'
+        )
+
+@app.route('/post/<int:postid>', methods=['GET'])
+def get_post(postid):
+    if 'username' in session:
+        db = None
+        try:
+            db = db_connect()
+            with db.cursor(pymysql.cursors.DictCursor) as cursor:
+                sql = 'select * from post where userid=%s and postid=%s'
+                cursor.execute(sql, (session['userid'], postid))
+                result = cursor.fetchone()
+
+            response = Response(
+                json.dumps({
+                    **result
+                }),
+                status=200,
+                mimetype='application/json'
+            )
+        except:
+            response = Response(
+                json.dumps({
+                    'message': 'The database cannot be accessed.',
+                }),
+                status=403,
+                mimetype='application/json'
+            )
+        finally:
+            if db != None:
+                db.close()
+
+            return response
+    else:
+        return Response(
+            json.dumps({
+                'message': 'The user was not found in the session.',
+            }),
+            status=404,
+            mimetype='application/json'
+        )
 
 @app.route('/post', methods=['POST'])
-def create_post_action():
-    db = None
-    try:
-        db = db_connect()
-        data = request.get_json()
-        with db.cursor(pymysql.cursors.DictCursor) as cursor:
-            sql = 'insert into post(userid, title, videolink, memo, korean, english) values(%s, %s, %s, %s, %s, %s)'
-            cursor.execute(sql, (session['userid'],
-                data.get('title'),
-                data.get('videolink'),
-                data.get('memo'),
-                data.get('korean'),
-                data.get('english')))
-            db.commit()
+def create_post():
+    if 'username' in session:
+        db = None
+        try:
+            db = db_connect()
+            data = request.get_json()
+            with db.cursor(pymysql.cursors.DictCursor) as cursor:
+                sql = 'insert into post(userid, title, videolink, memo, korean, english) values(%s, %s, %s, %s, %s, %s)'
+                cursor.execute(sql, (session['userid'],
+                    data.get('title'),
+                    data.get('videolink'),
+                    data.get('memo'),
+                    data.get('korean'),
+                    data.get('english')))
+                db.commit()
 
-            sql = 'select last_insert_id() postid'
-            cursor.execute(sql)
-            result = cursor.fetchone()
+                sql = 'select last_insert_id() postid'
+                cursor.execute(sql)
+                result = cursor.fetchone()
+            
+            response = Response(
+                json.dumps({
+                    **result
+                }),
+                status=200,
+                mimetype='application/json'
+            )
 
-        if db != None:
-            db.close()
-        return result
-    except:
-        if db != None:
-            db.close()
-        return {
-            'state': 'error'
-        }
+        except:
+            response = Response(
+                json.dumps({
+                    'message': 'The database cannot be accessed.',
+                }),
+                status=403,
+                mimetype='application/json'
+            )
 
-# @app.route('/post/<int:postid>')
-# def view_post_render(postid):
-#     db = None
-#     try:
-#         db = db_connect()
-#         with db.cursor(pymysql.cursors.DictCursor) as cursor:
-#             sql = 'select * from post where postid=%s'
-#             cursor.execute(sql, postid)
-#             result = cursor.fetchone()
+        finally:
+            if db != None:
+                db.close()
 
-#         if db != None:
-#             db.close()
-#         return render_template('view_post.html', post=result)
-#     except:
-#         if db != None:
-#             db.close()
-#         return 'error'
-
-# @app.route('/modifypost/<int:postid>')
-# def modify_post_render(postid):
-#     db = None
-#     try:
-#         db = db_connect()
-#         with db.cursor(pymysql.cursors.DictCursor) as cursor:
-#             sql = 'select * from post where postid=%s'
-#             cursor.execute(sql, postid)
-#             result = cursor.fetchone()
-        
-#         if db != None:
-#             db.close()
-#         return render_template('modify_post.html', post=result)
-#     except:
-#         if db != None:
-#             db.close()
-#         return 'error'
+            return response
+    else:
+        return Response(
+            json.dumps({
+                'message': 'The user was not found in the session.',
+            }),
+            status=404,
+            mimetype='application/json'
+        )
 
 @app.route('/post/<int:postid>', methods=['PUT'])
-def modify_post_action(postid):
-    db = None
-    try:
-        db = db_connect()
-        data = request.get_json()
-        with db.cursor(pymysql.cursors.DictCursor) as cursor:
-            sql = 'update post set title=%s, videolink=%s, memo=%s, korean=%s, english=%s where postid=%s'
-            cursor.execute(sql,
-                (data.get('title'),
-                data.get('videolink'),
-                data.get('memo'),
-                data.get('korean'),
-                data.get('english'),
-                postid))
-            db.commit()
-        
-        if db != None:
-            db.close()
-        return {'postid' : postid}
-    except:
-        if db != None:
-            db.close()
-        return {
-            'state': 'error'
-        }
+def update_post(postid):
+    if 'username' in session:
+        db = None
+        try:
+            db = db_connect()
+            data = request.get_json()
+            with db.cursor(pymysql.cursors.DictCursor) as cursor:
+                sql = 'update post set title=%s, videolink=%s, memo=%s, korean=%s, english=%s where postid=%s'
+                cursor.execute(sql,
+                    (data.get('title'),
+                    data.get('videolink'),
+                    data.get('memo'),
+                    data.get('korean'),
+                    data.get('english'),
+                    postid))
+                db.commit()
+
+                sql = 'select * from post where postid=%s'
+                cursor.execute(sql, postid)
+                result = cursor.fetchone()
+
+            response = Response(
+                json.dumps({
+                    **result
+                }),
+                status=200,
+                mimetype='application/json'
+            )
+            
+        except:
+            response = Response(
+                json.dumps({
+                    'message': 'The database cannot be accessed.',
+                }),
+                status=403,
+                mimetype='application/json'
+            )
+
+        finally:
+            if db != None:
+                db.close()
+
+            return response
+    else:
+        return Response(
+            json.dumps({
+                'message': 'The user was not found in the session.',
+            }),
+            status=404,
+            mimetype='application/json'
+        )
 
 @app.route('/post/<int:postid>', methods=['DELETE'])
-def delete_post_action(postid):
-    db = None
-    try:
-        db = db_connect()
-        with db.cursor(pymysql.cursors.DictCursor) as cursor:
-            sql = 'delete from post where postid=%s'
-            cursor.execute(sql, postid)
-        db.commit()
+def delete_post(postid):
+    if 'username' in session:
+        db = None
+        try:
+            db = db_connect()
+            with db.cursor(pymysql.cursors.DictCursor) as cursor:
+                sql = 'delete from post where postid=%s'
+                cursor.execute(sql, postid)
+            db.commit()
 
-        if db != None:
-            db.close()
-        return {
-            'state': 'success'
-        }
-    except:
-        if db != None:
-            db.close()
-        return {
-            'state': 'error'
-        }
+            response = Response(
+                status=204,
+            )
+        except:
+            response = Response(
+                json.dumps({
+                    'message': 'The database cannot be accessed.',
+                }),
+                status=403,
+                mimetype='application/json'
+            )
+
+        finally:
+            if db != None:
+                db.close()
+
+            return response
+    else:
+        return Response(
+            json.dumps({
+                'message': 'The user was not found in the session.',
+            }),
+            status=404,
+            mimetype='application/json'
+        )
 
 if __name__ == '__main__':
     if len(sys.argv) == 3:
