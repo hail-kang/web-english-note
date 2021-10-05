@@ -30,6 +30,8 @@ function Post() {
     visible: [false],
     pageState: pageState.CREATE,
   });
+  let code = state.videolink.slice(state.videolink.lastIndexOf("/") + 1);
+  let embed = "https://www.youtube.com/embed/" + code;
 
   useEffect(() => {
     if (postid != undefined) {
@@ -226,28 +228,13 @@ function Post() {
                   <iframe
                     id="videoframe"
                     className="embed-responsive-item"
-                    src={state.videolink}
+                    src={embed}
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   ></iframe>
                 </div>
-              ) : (
-                <div
-                  className="embed-responsive embed-responsive-16by9"
-                  style={{ display: "none" }}
-                  id="videodiv"
-                >
-                  <iframe
-                    id="videoframe"
-                    className="embed-responsive-item"
-                    src=""
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
-                </div>
-              )}
+              ) : null}
               {state.korean.map((_, i) => {
                 return (
                   <Form.Group key={i}>
@@ -341,28 +328,13 @@ function Post() {
                   <iframe
                     id="videoframe"
                     className="embed-responsive-item"
-                    src={state.videolink}
+                    src={embed}
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   ></iframe>
                 </div>
-              ) : (
-                <div
-                  className="embed-responsive embed-responsive-16by9"
-                  style={{ display: "none" }}
-                  id="videodiv"
-                >
-                  <iframe
-                    id="videoframe"
-                    className="embed-responsive-item"
-                    src=""
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
-                </div>
-              )}
+              ) : null}
             </Form.Group>
 
             {state.korean.map((_, i) => {
