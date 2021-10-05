@@ -24,11 +24,11 @@ function LoginForm({ setAuth }) {
       .then((response) => {
         return response.json();
       })
-      .then((dataJson) => {
-        console.log(dataJson);
+      .then((data) => {
+        console.log(data);
         setAuth({
           isLoggedIn: true,
-          username: "hail",
+          username: data.username,
         });
         history.push("/");
       });
