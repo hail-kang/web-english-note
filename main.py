@@ -101,7 +101,8 @@ def login():
             session['userid'] = result['userid']
 
         response_data = {
-            'state': 'success'
+            'state': 'success',
+            'username': username
         }
     except:
         response_data = {
