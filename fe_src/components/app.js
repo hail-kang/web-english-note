@@ -42,7 +42,7 @@ function App() {
                 </Nav.Link>
               ) : null}
               {auth.isLoggedIn ? (
-                <Nav.Link href="/logout">SignOut({auth.username})</Nav.Link>
+                <Nav.Link href="/signout">SignOut({auth.username})</Nav.Link>
               ) : null}
             </Nav>
           </Navbar.Collapse>
@@ -50,7 +50,7 @@ function App() {
       </Navbar>
       <Switch>
         <Route exact path="/">
-          {auth.isLoggedIn ? <PostList /> : <Redirect to="/login" />}
+          {auth.isLoggedIn ? <PostList /> : <Redirect to="/signin" />}
         </Route>
         <Route exact path="/post">
           <Post />
@@ -58,7 +58,7 @@ function App() {
         <Route path="/post/:postid">
           <Post />
         </Route>
-        <Route path="/login">
+        <Route path="/signin">
           <Login setAuth={setAuth} />
         </Route>
       </Switch>

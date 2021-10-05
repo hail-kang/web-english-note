@@ -14,7 +14,7 @@ function LoginForm({ setAuth }) {
   let history = useHistory();
   const [username, setUsername] = useState("");
   function login() {
-    fetch("/login", {
+    fetch("/signin", {
       method: "post",
       body: JSON.stringify({ username }),
       headers: {
