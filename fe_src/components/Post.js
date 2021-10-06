@@ -1,17 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {
-  Col,
-  Container,
-  Row,
-  Form,
-  InputGroup,
-  FormControl,
-  Button,
-  ListGroup,
-  ListGroupItem,
-  FormGroup,
-} from "react-bootstrap";
-import { Link, useHistory, useParams } from "react-router-dom";
+import { Col, Container, Row, Form, Button } from "react-bootstrap";
+import { useHistory, useParams } from "react-router-dom";
 
 const pageState = {
   CREATE: "CREATE",
@@ -35,25 +24,27 @@ function Post() {
 
   useEffect(() => {
     if (postid != undefined) {
-      fetch(`/post/${postid}`)
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          console.log(data);
+      fetch(`/post/${postid}`).then((response) => {
+        if (response.ok) {
+          response.json().then((data) => {
+            let korean = data.korean.split(";");
+            let english = data.english.split(";");
 
-          let korean = data.korean.split(";");
-          let english = data.english.split(";");
-
-          setState({
-            title: data.title,
-            videolink: data.videolink,
-            korean: korean,
-            english: english,
-            visible: Array.from({ length: korean.length }, () => false),
-            pageState: pageState.READ,
+            setState({
+              title: data.title,
+              videolink: data.videolink,
+              korean: korean,
+              english: english,
+              visible: Array.from({ length: korean.length }, () => false),
+              pageState: pageState.READ,
+            });
           });
-        });
+        } else {
+          response.json().then((data) => {
+            alert(`[${response.status} Error] ${data.message}`);
+          });
+        }
+      });
     }
   }, []);
 
@@ -134,15 +125,16 @@ function Post() {
       headers: {
         "Content-Type": "application/json",
       },
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        alert("삭제가 완료 됐습니다.");
-        history.push("/");
-      });
+    }).then((response) => {
+      if (response.ok) {
+        alert("삭제를 완료 했습니다.");
+        history.goBack();
+      } else {
+        response.json().then((data) => {
+          alert(`[${response.status} Error] ${data.message}`);
+        });
+      }
+    });
   }
 
   function createPost() {
@@ -157,13 +149,22 @@ function Post() {
       headers: {
         "Content-Type": "application/json",
       },
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-      });
+    }).then((response) => {
+      if (response.ok) {
+        response.json().then((data) => {
+          alert("저장을 완료 했습니다.");
+          setState({
+            ...state,
+            pageState: pageState.READ,
+          });
+          history.push(`/post/${data.postid}`);
+        });
+      } else {
+        response.json().then((data) => {
+          alert(`[${response.status} Error] ${data.message}`);
+        });
+      }
+    });
   }
 
   function modifyPost() {
@@ -174,7 +175,7 @@ function Post() {
   }
 
   function updatePost() {
-    fetch("/post", {
+    fetch(`/post/${postid}`, {
       method: "put",
       body: JSON.stringify({
         title: state.title,
@@ -185,13 +186,21 @@ function Post() {
       headers: {
         "Content-Type": "application/json",
       },
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-      });
+    }).then((response) => {
+      if (response.ok) {
+        response.json().then((data) => {
+          alert("저장을 완료 했습니다.");
+          setState({
+            ...state,
+            pageState: pageState.READ,
+          });
+        });
+      } else {
+        response.json().then((data) => {
+          alert(`[${response.status} Error] ${data.message}`);
+        });
+      }
+    });
   }
 
   if (

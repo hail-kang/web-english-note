@@ -1,24 +1,7 @@
-import React, { useContext, createContext, useState } from "react";
-import {
-  BrowserRouter,
-  Route,
-  Switch,
-  useHistory,
-  Link,
-  Redirect,
-} from "react-router-dom";
+import React, { useState } from "react";
+import { BrowserRouter, Route, Switch, Link, Redirect } from "react-router-dom";
 
-import {
-  Col,
-  Container,
-  Row,
-  Form,
-  InputGroup,
-  FormControl,
-  Button,
-  Navbar,
-  Nav,
-} from "react-bootstrap";
+import { Container, Navbar, Nav } from "react-bootstrap";
 
 import Login from "./Login";
 import PostList from "./PostList";

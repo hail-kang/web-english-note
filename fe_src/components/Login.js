@@ -22,16 +22,21 @@ function LoginForm({ setAuth }) {
       },
     })
       .then((response) => {
-        return response.json();
+        if (response.ok) {
+          response.json().then((data) => {
+            setAuth({
+              isLoggedIn: true,
+              username: data.username,
+            });
+            history.push("/");
+          });
+        } else {
+          response.json().then((data) => {
+            alert(`[${response.status} Error] ${data.message}`);
+          });
+        }
       })
-      .then((data) => {
-        console.log(data);
-        setAuth({
-          isLoggedIn: true,
-          username: data.username,
-        });
-        history.push("/");
-      });
+      .catch((error) => console.log(error));
   }
   function onUsernameInput(event) {
     setUsername(event.target.value);
