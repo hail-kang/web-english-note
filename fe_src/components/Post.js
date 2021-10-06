@@ -211,8 +211,8 @@ function Post() {
       <Container>
         <Row>
           <Col md={{ offset: 3, span: 6 }} xs={{ offset: 1, span: 10 }}>
-            <Form.Group>
-              <Form.Label>Title</Form.Label>
+            <Form.Group className="mb-3">
+              <Form.Label className="fw-bold">Title</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="제목을 입력하시오"
@@ -221,8 +221,8 @@ function Post() {
               />
             </Form.Group>
 
-            <Form.Group>
-              <Form.Label>Link</Form.Label>
+            <Form.Group className="mb-3">
+              <Form.Label className="fw-bold">Link</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="유튜브 주소를 입력하시오"
@@ -243,7 +243,9 @@ function Post() {
                 return (
                   <Form.Group key={i}>
                     <div>
-                      {i == 0 ? <Form.Label>Text</Form.Label> : null}
+                      {i == 0 ? (
+                        <Form.Label className="fw-bold">Text</Form.Label>
+                      ) : null}
                       <Form.Control
                         type="text"
                         id={`kor-${i}`}
@@ -315,13 +317,13 @@ function Post() {
       <Container>
         <Row>
           <Col md={{ offset: 3, span: 6 }} xs={{ offset: 1, span: 10 }}>
-            <Form.Group>
-              <Form.Label>Title</Form.Label>
+            <Form.Group className="mb-3">
+              <Form.Label className="fw-bold">Title</Form.Label>
               <p>{state.title}</p>
             </Form.Group>
 
-            <Form.Group>
-              <Form.Label>Link</Form.Label>
+            <Form.Group className="mb-3">
+              <Form.Label className="fw-bold">Link</Form.Label>
               {state.videolink != "" ? (
                 <div className="ratio ratio-16x9">
                   <iframe
@@ -338,7 +340,9 @@ function Post() {
               return (
                 <Form.Group key={i}>
                   <div>
-                    {i == 0 ? <Form.Label>Text</Form.Label> : null}
+                    {i == 0 ? (
+                      <Form.Label className="fw-bold">Text</Form.Label>
+                    ) : null}
                     {state.visible[i] ? (
                       <>
                         <p id={`kor-${i}`}>
