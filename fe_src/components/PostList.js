@@ -40,7 +40,7 @@ function PostList() {
     return (
       <Container>
         <Row>
-          <Col md={{ offset: 4, span: 4 }} xl={{ offset: 2, span: 8 }}>
+          <Col md={{ offset: 3, span: 6 }}>
             <ListGroup>
               {state.items.map((item) => {
                 return (
