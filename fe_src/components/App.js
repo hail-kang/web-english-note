@@ -11,14 +11,17 @@ function App() {
   const [auth, setAuth] = useState({ isLoggedIn: false, username: "" });
   return (
     <BrowserRouter>
-      <Navbar bg="light">
+      <Navbar bg="light" expand="lg">
         <Container fluid>
           <Navbar.Brand as={Link} to="/">
             EngNot
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav>
+          <Navbar.Collapse
+            id="basic-navbar-nav"
+            className="justify-content-end"
+          >
+            <Nav className="me-auto">
               {auth.isLoggedIn ? (
                 <Nav.Link as={Link} to="/post">
                   Create
