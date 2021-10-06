@@ -8,7 +8,7 @@
 $ npm install
 ```
 
-# 프론트엔드 번들링
+# 프론트엔드 빌드
 ```
 $ npx webpack
 ```
