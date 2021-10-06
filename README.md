@@ -6,6 +6,8 @@
 # 프론트엔드 모듈 설치
 ```
 $ npm install
+$ cd fe_dist
+$ npm install
 ```
 
 # 프론트엔드 빌드
