@@ -208,9 +208,9 @@ function Post() {
     state.pageState == pageState.MODIFY
   ) {
     return (
-      <Container fluid>
+      <Container>
         <Row>
-          <Col md={{ offset: 3, span: 6 }} xs={{ offset: 2, span: 8 }}>
+          <Col md={{ offset: 3, span: 6 }} xs={{ offset: 1, span: 10 }}>
             <Form.Group>
               <Form.Label>Title</Form.Label>
               <Form.Control
@@ -230,13 +230,8 @@ function Post() {
                 onInput={changeVideoLink}
               />
               {state.videolink != "" ? (
-                <div
-                  className="embed-responsive embed-responsive-16by9"
-                  id="videodiv"
-                >
+                <div className="ratio ratio-16x9">
                   <iframe
-                    id="videoframe"
-                    className="embed-responsive-item"
                     src={embed}
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -269,11 +264,9 @@ function Post() {
                 );
               })}
               <Button variant="light" onClick={addText}>
-                {/* <span className="fas fa-plus"></span> */}
                 <span className="fi-plus"></span>
               </Button>{" "}
               <Button variant="danger" onClick={removeText}>
-                {/* <span className="fas fa-minus"></span> */}
                 <span className="fi-minus"></span>
               </Button>
             </Form.Group>
@@ -282,14 +275,14 @@ function Post() {
         <br />
         {state.pageState == pageState.CREATE ? (
           <Row>
-            <Col md={{ offset: 3, span: 3 }} xs={{ offset: 2, span: 4 }}>
+            <Col md={{ offset: 3, span: 3 }} xs={{ offset: 1, span: 5 }}>
               <div className="d-grid gap-1">
                 <Button variant="light" size="lg" onClick={gotoList}>
                   취소
                 </Button>
               </div>
             </Col>
-            <Col md={{ span: 3 }} xs={{ span: 4 }}>
+            <Col md={{ span: 3 }} xs={{ span: 5 }}>
               <div className="d-grid gap-1">
                 <Button variant="primary" size="lg" onClick={createPost}>
                   저장
@@ -299,14 +292,14 @@ function Post() {
           </Row>
         ) : (
           <Row>
-            <Col md={{ offset: 3, span: 3 }} xs={{ offset: 2, span: 4 }}>
+            <Col md={{ offset: 3, span: 3 }} xs={{ offset: 1, span: 5 }}>
               <div className="d-grid gap-1">
                 <Button variant="light" size="lg" onClick={cancle}>
                   취소
                 </Button>
               </div>
             </Col>
-            <Col md={{ span: 3 }} xs={{ span: 4 }}>
+            <Col md={{ span: 3 }} xs={{ span: 5 }}>
               <div className="d-grid gap-1">
                 <Button variant="primary" size="lg" onClick={updatePost}>
                   저장
@@ -319,9 +312,9 @@ function Post() {
     );
   } else if (state.pageState == pageState.READ) {
     return (
-      <Container fluid>
+      <Container>
         <Row>
-          <Col md={{ offset: 3, span: 6 }} xs={{ offset: 2, span: 8 }}>
+          <Col md={{ offset: 3, span: 6 }} xs={{ offset: 1, span: 10 }}>
             <Form.Group>
               <Form.Label>Title</Form.Label>
               <p>{state.title}</p>
@@ -330,13 +323,8 @@ function Post() {
             <Form.Group>
               <Form.Label>Link</Form.Label>
               {state.videolink != "" ? (
-                <div
-                  className="embed-responsive embed-responsive-16by9"
-                  id="videodiv"
-                >
+                <div className="ratio ratio-16x9">
                   <iframe
-                    id="videoframe"
-                    className="embed-responsive-item"
                     src={embed}
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -384,14 +372,14 @@ function Post() {
         </Row>
         <br />
         <Row>
-          <Col md={{ offset: 3, span: 3 }} xs={{ offset: 2, span: 4 }}>
+          <Col md={{ offset: 3, span: 3 }} xs={{ offset: 1, span: 5 }}>
             <div className="d-grid gap-1">
               <Button variant="danger" size="lg" onClick={deletePost}>
                 삭제
               </Button>
             </div>
           </Col>
-          <Col md={{ span: 3 }} xs={{ span: 4 }}>
+          <Col md={{ span: 3 }} xs={{ span: 5 }}>
             <div className="d-grid gap-1">
               <Button variant="light" size="lg" onClick={modifyPost}>
                 수정
