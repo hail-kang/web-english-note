@@ -91,7 +91,7 @@ def signout():
     session.pop('userid')
     return redirect(url_for('index'))
 
-@app.route('/posts', methods=['GET'])
+@app.route('/post', methods=['GET'])
 def get_posts():
     if 'username' in session:
         db = None
