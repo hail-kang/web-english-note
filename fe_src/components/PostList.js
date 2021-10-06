@@ -1,41 +1,40 @@
 import React, { useState, useEffect } from "react";
-import {
-  Col,
-  Container,
-  Row,
-  Form,
-  InputGroup,
-  FormControl,
-  Button,
-  ListGroup,
-  ListGroupItem,
-} from "react-bootstrap";
-import { Link, useHistory } from "react-router-dom";
+import { Col, Container, Row, ListGroup, ListGroupItem } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 function PostList() {
-  const [error, setError] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [items, setItems] = useState([]);
+  const [state, setState] = useState({
+    error: null,
+    isLoaded: false,
+    items: [],
+  });
 
   useEffect(() => {
-    fetch("/posts")
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setIsLoaded(true);
-          console.log(result);
-          setItems(result.posts);
-        },
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-        }
-      );
+    fetch("/post").then((response) => {
+      if (response.ok) {
+        response.json().then((data) => {
+          setState({
+            error: null,
+            isLoaded: true,
+            items: data.posts,
+          });
+        });
+      } else {
+        response.json().then((data) => {
+          setState({
+            error: {
+              status: response.status,
+              message: data.message,
+            },
+          });
+        });
+      }
+    });
   }, []);
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  } else if (!isLoaded) {
+  if (state.error != null) {
+    return <div>{`[${state.error.status} Error] ${state.error.message}`}</div>;
+  } else if (!state.isLoaded) {
     return <div>Loading...</div>;
   } else {
     return (
@@ -43,7 +42,7 @@ function PostList() {
         <Row>
           <Col md={{ offset: 4, span: 4 }} xl={{ offset: 2, span: 8 }}>
             <ListGroup>
-              {items.map((item) => {
+              {state.items.map((item) => {
                 return (
                   <ListGroupItem
                     key={item.postid}
