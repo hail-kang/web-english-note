@@ -11,27 +11,27 @@ function App() {
   const [auth, setAuth] = useState({ isLoggedIn: false, username: "" });
   return (
     <BrowserRouter>
-      <Navbar bg="light" expand="lg">
+      <Navbar bg="dark" variant="dark" expand="lg" className="mb-4">
         <Container fluid>
           <Navbar.Brand as={Link} to="/">
             EngNot
           </Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse
-            id="basic-navbar-nav"
-            className="justify-content-end"
-          >
-            <Nav className="me-auto">
-              {auth.isLoggedIn ? (
-                <Nav.Link as={Link} to="/post">
-                  Create
-                </Nav.Link>
-              ) : null}
-              {auth.isLoggedIn ? (
-                <Nav.Link href="/signout">SignOut({auth.username})</Nav.Link>
-              ) : null}
-            </Nav>
-          </Navbar.Collapse>
+          {auth.isLoggedIn ? (
+            <>
+              <Navbar.Toggle aria-controls="basic-navbar-nav" />
+              <Navbar.Collapse
+                id="basic-navbar-nav"
+                className="justify-content-end"
+              >
+                <Nav className="me-auto">
+                  <Nav.Link as={Link} to="/post">
+                    Create
+                  </Nav.Link>
+                  <Nav.Link href="/signout">SignOut({auth.username})</Nav.Link>
+                </Nav>
+              </Navbar.Collapse>
+            </>
+          ) : null}
         </Container>
       </Navbar>
       <Switch>

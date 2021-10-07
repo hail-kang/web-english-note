@@ -211,7 +211,7 @@ function Post() {
       <Container>
         <Row>
           <Col md={{ offset: 3, span: 6 }} xs={{ offset: 1, span: 10 }}>
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-4">
               <Form.Label className="fw-bold">Title</Form.Label>
               <Form.Control
                 type="text"
@@ -220,8 +220,7 @@ function Post() {
                 onInput={changeTitle}
               />
             </Form.Group>
-
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-4">
               <Form.Label className="fw-bold">Link</Form.Label>
               <Form.Control
                 type="text"
@@ -239,39 +238,38 @@ function Post() {
                   ></iframe>
                 </div>
               ) : null}
-              {state.korean.map((_, i) => {
-                return (
-                  <Form.Group key={i}>
-                    <div>
-                      {i == 0 ? (
-                        <Form.Label className="fw-bold">Text</Form.Label>
-                      ) : null}
-                      <Form.Control
-                        type="text"
-                        id={`kor-${i}`}
-                        placeholder="한국어를 입력하시오"
-                        value={state.korean[i]}
-                        onInput={(e) => changeKorean(e, i)}
-                      />
-                      <Form.Control
-                        type="text"
-                        id={`eng-${i}`}
-                        placeholder="영어를 입력하시오"
-                        value={state.english[i]}
-                        onInput={(e) => changeEnglish(e, i)}
-                      />
-                    </div>
-                    <br />
-                  </Form.Group>
-                );
-              })}
-              <Button variant="light" onClick={addText}>
-                <span className="fi-plus"></span>
-              </Button>{" "}
-              <Button variant="danger" onClick={removeText}>
-                <span className="fi-minus"></span>
-              </Button>
             </Form.Group>
+            {state.korean.map((_, i) => {
+              return (
+                <Form.Group key={i} className="mb-4">
+                  <div>
+                    {i == 0 ? (
+                      <Form.Label className="fw-bold">Text</Form.Label>
+                    ) : null}
+                    <Form.Control
+                      type="text"
+                      id={`kor-${i}`}
+                      placeholder="한국어를 입력하시오"
+                      value={state.korean[i]}
+                      onInput={(e) => changeKorean(e, i)}
+                    />
+                    <Form.Control
+                      type="text"
+                      id={`eng-${i}`}
+                      placeholder="영어를 입력하시오"
+                      value={state.english[i]}
+                      onInput={(e) => changeEnglish(e, i)}
+                    />
+                  </div>
+                </Form.Group>
+              );
+            })}
+            <Button variant="dark" onClick={addText}>
+              <span className="plus"></span>
+            </Button>{" "}
+            <Button variant="danger" onClick={removeText}>
+              <span className="minus"></span>
+            </Button>
           </Col>
         </Row>
         <br />
@@ -279,15 +277,15 @@ function Post() {
           <Row>
             <Col md={{ offset: 3, span: 3 }} xs={{ offset: 1, span: 5 }}>
               <div className="d-grid gap-1">
-                <Button variant="light" size="lg" onClick={gotoList}>
-                  취소
+                <Button variant="dark" size="lg" onClick={createPost}>
+                  저장
                 </Button>
               </div>
             </Col>
             <Col md={{ span: 3 }} xs={{ span: 5 }}>
               <div className="d-grid gap-1">
-                <Button variant="primary" size="lg" onClick={createPost}>
-                  저장
+                <Button variant="danger" size="lg" onClick={gotoList}>
+                  취소
                 </Button>
               </div>
             </Col>
@@ -296,15 +294,15 @@ function Post() {
           <Row>
             <Col md={{ offset: 3, span: 3 }} xs={{ offset: 1, span: 5 }}>
               <div className="d-grid gap-1">
-                <Button variant="light" size="lg" onClick={cancle}>
-                  취소
+                <Button variant="dark" size="lg" onClick={updatePost}>
+                  저장
                 </Button>
               </div>
             </Col>
             <Col md={{ span: 3 }} xs={{ span: 5 }}>
               <div className="d-grid gap-1">
-                <Button variant="primary" size="lg" onClick={updatePost}>
-                  저장
+                <Button variant="danger" size="lg" onClick={cancle}>
+                  취소
                 </Button>
               </div>
             </Col>
@@ -317,12 +315,12 @@ function Post() {
       <Container>
         <Row>
           <Col md={{ offset: 3, span: 6 }} xs={{ offset: 1, span: 10 }}>
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-4">
               <Form.Label className="fw-bold">Title</Form.Label>
               <p>{state.title}</p>
             </Form.Group>
 
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-4">
               <Form.Label className="fw-bold">Link</Form.Label>
               {state.videolink != "" ? (
                 <div className="ratio ratio-16x9">
@@ -338,7 +336,7 @@ function Post() {
 
             {state.korean.map((_, i) => {
               return (
-                <Form.Group key={i}>
+                <Form.Group key={i} className="mb-4">
                   <div>
                     {i == 0 ? (
                       <Form.Label className="fw-bold">Text</Form.Label>
@@ -347,22 +345,21 @@ function Post() {
                       <>
                         <p id={`kor-${i}`}>
                           <span
-                            className="fi-caret-bottom"
+                            // className="fi-caret-bottom"
+                            className="eye"
                             onClick={(e) => changeVisible(e, i)}
                           ></span>
                           {state.korean[i]}
                         </p>
-                        <p id={`eng-${i}`} style={{ paddingLeft: "20px" }}>
-                          {state.english[i]}
-                        </p>
+                        <p id={`eng-${i}`}>{state.english[i]}</p>
                       </>
                     ) : (
                       <>
                         <p id={`kor-${i}`}>
                           <span
-                            className="fi-caret-right"
+                            // className="fi-caret-right"
+                            className="eye-off"
                             onClick={(e) => changeVisible(e, i)}
-                            style={{ marginRight: "4px" }}
                           ></span>
                           {state.korean[i]}
                         </p>
@@ -378,15 +375,15 @@ function Post() {
         <Row>
           <Col md={{ offset: 3, span: 3 }} xs={{ offset: 1, span: 5 }}>
             <div className="d-grid gap-1">
-              <Button variant="danger" size="lg" onClick={deletePost}>
-                삭제
+              <Button variant="dark" size="lg" onClick={modifyPost}>
+                수정
               </Button>
             </div>
           </Col>
           <Col md={{ span: 3 }} xs={{ span: 5 }}>
             <div className="d-grid gap-1">
-              <Button variant="light" size="lg" onClick={modifyPost}>
-                수정
+              <Button variant="danger" size="lg" onClick={deletePost}>
+                삭제
               </Button>
             </div>
           </Col>

@@ -53,6 +53,7 @@ function PostList() {
                     }}
                     as={Link}
                     to={`post/${item.postid}`}
+                    action={true}
                   >
                     {item.title}
                   </ListGroupItem>

@@ -50,7 +50,7 @@ function LoginForm({ setAuth }) {
         value={username}
         onInput={onUsernameInput}
       ></FormControl>
-      <Button variant="outline-secondary" onClick={login}>
+      <Button variant="dark" onClick={login}>
         확인
       </Button>
     </InputGroup>
