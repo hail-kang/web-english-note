@@ -1,1 +1,45 @@
 @import "~bootstrap/scss/bootstrap";
+
+.eye {
+  display: inline-block;
+  background-image: url("./assets/eye.svg");
+  width: 1rem;
+  height: 1rem;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.eye-off {
+  display: inline-block;
+  background-image: url("./assets/eye-off.svg");
+  width: 1rem;
+  height: 1rem;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.plus {
+  display: inline-block;
+  background-image: url("./assets/plus.svg");
+  width: 1rem;
+  height: 1rem;
+  padding: 0.5rem;
+  padding-bottom: 0.3rem;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.minus {
+  display: inline-block;
+  background-image: url("./assets/minus.svg");
+  width: 1rem;
+  height: 1rem;
+  padding: 0.5rem;
+  padding-bottom: 0.3rem;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
